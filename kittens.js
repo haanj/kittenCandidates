@@ -1,28 +1,64 @@
+// Holds all kittens
+var allKittens = [];
+
 // Constructor for photos
 function Photos(id) {
   this.id = id;
   this.image = "contestants/" + id + ".jpg";
-  this.votes = 0;
-  this.losses = 0;
+  this.wins = [];
+  this.losses = [];
+}
+
+function startUp() {
+  // If user data exists, restores, else initializes new data
+  if (localStorage.allKittens) {
+    restoreAllKittens();
+  } else {
+    initKittens();
+  }
+
+  // Adds reset button event listener to reset user data
+  $('#reset').click(function(){
+    allKittens.forEach(function(kitten){
+      kitten.wins = [];
+      kitten.losses = [];
+    });
+  });
+
+  printImages();
 }
 
 // Create array of kitten objects
 function initKittens(){
-  console.log('running initKittens');
-
   // hardcoded placeholder array - replace sometime with array generated from files in /contestants
   var kittenIds = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"];
 
-  // creates array of Photos objects from array of ids
-  var kittens = kittenIds.map(function(kitten){
-    return new Photos(kitten);
-  })
+  // If allKittens already exists, check against current kittenIds, deleting/adding where necessary
+  if (allKittens) {
+    // to do
 
-  console.log(kittens);
-  return kittens;
+
+  } else {
+    // creates array of Photos objects from array of ids
+    var kittens = kittenIds.map(function(kitten){
+      return new Photos(kitten);
+    });
+
+    console.log(kittens);
+    allKittens = kittens;
+  }
 }
 
-var allKittens = initKittens();
+function backupAllKittens(){
+  var encoded = JSON.stringify(allKittens);
+  localStorage.setItem('allKittens', encoded);
+  console.log('Kittens saved!');
+}
+
+function restoreAllKittens(){
+  var data = localStorage.getItem('allKittens');
+  allKittens = JSON.parse(data);
+}
 
 
 // returns array of two Photos objects
@@ -56,20 +92,20 @@ function printImages(){
 
   //add event listeners
   $firstImage.click(function(){
-    vote(kittens[0].id);
-    loss(kittens[1].id);
+    changeScore(kittens[0].id, kittens[1].id);
     statistics(kittens[0]);
   });
 
   $secondImage.click(function(){
-    vote(kittens[1].id);
-    loss(kittens[0].id);
-    statistics(kittens[1])
+    changeScore(kittens[1].id, kittens[0].id);
+    statistics(kittens[1]);
   });
 }
 
 // Displays stats of Photo object
 function statistics(kitten){
+  backupAllKittens();
+
   $stats = $('#imageStats');
   $firstImage = $('#leftPic');
   $secondImage = $('#rightPic');
@@ -77,7 +113,7 @@ function statistics(kitten){
   $firstImage.off();
   $secondImage.off();
 
-  var message = "This kitten has won " + kitten.votes + " out of " + (kitten.votes+kitten.losses) + " times.";
+  var message = "This kitten has won " + kitten.wins.length + " out of " + (kitten.wins.length + kitten.losses.length) + " votes.";
 
   $firstImage.html('<img src="'+ kitten.image + '">');
   $secondImage.html('');
@@ -92,22 +128,18 @@ function statistics(kitten){
 
 
 // Registers vote, argument needs to be string
-function vote(id){
+function changeScore(winner, loser){
   allKittens.forEach(function(kitten){
-    if (id === kitten.id){
-      kitten.votes++;
+    if (winner === kitten.id){
+      kitten.wins.push(loser);
       console.log("1 point logged for " + kitten.id);
-    }
-  });
-}
-
-function loss(id){
-  allKittens.forEach(function(kitten){
-    if (id === kitten.id){
-      kitten.losses++;
+    } else if (loser === kitten.id){
+      kitten.losses.push(loser);
       console.log("1 loss logged for " + kitten.id);
     }
   });
+
+  backupAllKittens();
 }
 
 // Gets kitten id string from image source. Not currently used
@@ -118,10 +150,5 @@ function getKittenFromImage(image){
   return image;
 }
 
-function backupAllKittens(){
-  var encoded = JSON.stringify(allKittens);
-  localStorage.setItem('allKittens', encoded);
-}
-
-printImages();
+startUp();
 //statistics(allKittens[0]);
