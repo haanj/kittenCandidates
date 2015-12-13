@@ -12,8 +12,12 @@ function Photo(id) {
 }
 
 
-
 function startUp() {
+  // creates dummy placeholder stats for layout purposes
+  $('#imageStats').html('<p> blahblah </p>' + "<button id='continue'>Continue</button>");
+
+
+
   // If user data exists, restores, else initializes new data
   if (localStorage.allKittens) {
     restoreAllKittens();
@@ -90,14 +94,11 @@ function printImages(){
   // Shows all images, hide #imageStats
   $firstImage.show("fast");
   $secondImage.show("fast");
-  $('#imageStats').hide("fast");
-
-
+  $('#imageStats').css('visibility','hidden')
 
   //$('#myChart').css('display', 'none');
 
   var kittens = randomKittens();
-  $('#imageStats').html("");
 
 
 
@@ -139,7 +140,8 @@ function statistics(kitten){
 
   var message = "This kitten has won " + kitten.wins.length + " out of " + (kitten.wins.length + kitten.losses.length) + " match-ups";
 
-  $stats.show('fast');
+  $stats.css('visibility','visible');
+
   $stats.html('<p>' + message + '</p>' + "<button id='continue'>Continue</button>");
 
   $button = $('#continue');
