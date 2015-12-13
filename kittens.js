@@ -7,7 +7,7 @@ var chart;
 function Photo(id) {
   this.id = id;
   this.image = "contestants/" + id + ".jpg";
-  this.wins = [];
+  this.wins = []; //stores ids of all kittens it's won against
   this.losses = [];
 }
 
@@ -142,7 +142,7 @@ function statistics(kitten){
 
   $stats.css('visibility','visible');
 
-  $stats.html('<p>' + message + '</p>' + "<button id='continue'>Continue</button>");
+  $stats.html('<p>' + message + '</p>' + "<button id='continue'>Vote Again!</button>");
 
   $button = $('#continue');
 
