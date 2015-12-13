@@ -7,8 +7,8 @@ var chart;
 function Photo(id) {
   this.id = id;
   this.image = "contestants/" + id + ".jpg";
-  this.wins = []; //stores ids of all kittens it's won against
-  this.losses = [];
+  this.wins = []; //stores ids of all kittens it's won against. Can just loop through, looking for specific kittens to get stats
+  this.losses = []; //ditto
 }
 
 
@@ -43,7 +43,7 @@ function initKittens(){
 
   // If allKittens already exists, check against current kittenIds, deleting/adding where necessary
   if (allKittens) {
-    // to do
+    // Apparently this isn't possible...
   } else {
     // creates array of Photos objects from array of ids
     var kittens = kittenIds.map(function(kitten){

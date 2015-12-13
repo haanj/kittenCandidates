@@ -1,0 +1,72 @@
+html {
+  font-family: 'Nunito', sans-serif;
+  color: #2C3E50;
+}
+
+body {
+  background-color: #D7DADB;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: solid;
+  height: 100vh;
+}
+
+header {
+  background-color: #2C3E50;
+  height: 20vh;
+  font-size: 200%;
+  font-size: 2.5vw;
+  color: #FFFFFF;
+  padding: 10px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  padding: 1em;
+}
+
+footer {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  color: #FFFFFF;
+  background-color: #2C3E50;
+  height: 10vh;
+}
+
+img {
+  width: 30vw;
+  max-width: 250px;
+  margin: 2em;
+  border: solid 3px #6DBCDB;
+}
+
+#votingBooth {
+  display: flex;
+  justify-content: center;
+
+}
+
+#imageStats {
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+}
+
+#pageHeader {
+  text-align: center;
+}
+
+#continue {
+  background-color: #D7DADB;
+  border: solid 3px #6DBCDB;
+}
+
+#reset {
+  background-color: #2C3E50;
+  border: none;
+  margin-bottom: .5em;
+}
