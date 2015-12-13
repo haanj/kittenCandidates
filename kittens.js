@@ -1,13 +1,17 @@
 // Holds all kittens
 var allKittens = [];
+var chart;
+
 
 // Constructor for photos
-function Photos(id) {
+function Photo(id) {
   this.id = id;
   this.image = "contestants/" + id + ".jpg";
   this.wins = [];
   this.losses = [];
 }
+
+
 
 function startUp() {
   // If user data exists, restores, else initializes new data
@@ -36,12 +40,10 @@ function initKittens(){
   // If allKittens already exists, check against current kittenIds, deleting/adding where necessary
   if (allKittens) {
     // to do
-
-
   } else {
     // creates array of Photos objects from array of ids
     var kittens = kittenIds.map(function(kitten){
-      return new Photos(kitten);
+      return new Photo(kitten);
     });
 
     console.log(kittens);
@@ -77,15 +79,27 @@ function randomKittens(){
 
 // Prints images to page
 function printImages(){
-  console.log('running printImages')
-  var kittens = randomKittens();
-
-  console.log('kittens are ' + kittens);
-
-  $('#imageStats').html("");
-
+  //
   $firstImage = $('#leftPic');
   $secondImage = $('#rightPic');
+
+  // remove event listeners on images
+  $firstImage.off();
+  $secondImage.off();
+
+  // Shows all images, hide #imageStats
+  $firstImage.show("fast");
+  $secondImage.show("fast");
+  $('#imageStats').hide("fast");
+
+
+
+  //$('#myChart').css('display', 'none');
+
+  var kittens = randomKittens();
+  $('#imageStats').html("");
+
+
 
   $firstImage.html('<img src="'+kittens[0].image + '">');
   $secondImage.html('<img src="'+kittens[1].image + '">');
@@ -93,37 +107,55 @@ function printImages(){
   //add event listeners
   $firstImage.click(function(){
     changeScore(kittens[0].id, kittens[1].id);
+    $secondImage.hide("fast");
     statistics(kittens[0]);
   });
 
   $secondImage.click(function(){
     changeScore(kittens[1].id, kittens[0].id);
+    $firstImage.hide("fast");
     statistics(kittens[1]);
   });
 }
 
 // Displays stats of Photo object
 function statistics(kitten){
+  //$('#myChart').css('display', 'block');
   backupAllKittens();
+  /*
+  if (chart) {
+    chart.destroy();
+  }
+  chart = buildGraph(kittens);
+  */
 
   $stats = $('#imageStats');
   $firstImage = $('#leftPic');
   $secondImage = $('#rightPic');
 
+  // removes event listeners
   $firstImage.off();
   $secondImage.off();
 
-  var message = "This kitten has won " + kitten.wins.length + " out of " + (kitten.wins.length + kitten.losses.length) + " votes.";
+  var message = "This kitten has won " + kitten.wins.length + " out of " + (kitten.wins.length + kitten.losses.length) + " match-ups";
 
-  $firstImage.html('<img src="'+ kitten.image + '">');
-  $secondImage.html('');
+  $stats.show('fast');
   $stats.html('<p>' + message + '</p>' + "<button id='continue'>Continue</button>");
 
   $button = $('#continue');
 
-  $button.click(printImages);
-  $firstImage.click(printImages);
-
+  $button.click(function(){
+    $secondImage.show("fast");
+    printImages();
+  });
+  $firstImage.click(function(){
+    $secondImage.show("fast");
+    printImages();
+  });
+  $secondImage.click(function(){
+    $secondImage.show("fast");
+    printImages();
+  });
 }
 
 
@@ -150,5 +182,38 @@ function getKittenFromImage(image){
   return image;
 }
 
-startUp();
-//statistics(allKittens[0]);
+// prints graph -- Unfinished and removed, as Charlie didn't like how Chart.js went in class
+/*
+function buildGraph(kittens){
+  var ctx = document.getElementById("myChart").getContext("2d");
+
+  var data = [
+      {
+          value: kittens[0].wins.filter(function(kitten){
+            console.log(kitten);
+            if (kitten === kittens[1].id) {
+              return true;
+            }
+          }).length,
+          color:"#F7464A",
+          highlight: "#FF5A5E",
+          label: "Red"
+      },
+      {
+          value: kittens[1].wins.filter(function(kitten){
+            console.log(kitten);
+            if (kitten === kittens[0].id) {
+              return true;
+            }
+          }).length,
+          color: "#46BFBD",
+          highlight: "#5AD3D1",
+          label: "Green"
+      }
+  ]
+
+  return new Chart(ctx).Pie(data);
+}
+*/
+
+$(document).ready(startUp);
